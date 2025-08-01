@@ -77,7 +77,7 @@ type FastSymbolsTable struct {
 	symbolsMapCapacityLowerBound int
 
 	usedSymbolRefs int
-	commonSymbols  []string
+	commonSymbols  map[string]uint32
 	offset         uint32
 }
 
@@ -89,7 +89,7 @@ func NewFastSymbolsTable(capacityHint int) *FastSymbolsTable {
 	}
 }
 
-func (t *FastSymbolsTable) ConfigureCommonSymbols(offset uint32, commonSymbols []string) {
+func (t *FastSymbolsTable) ConfigureCommonSymbols(offset uint32, commonSymbols map[string]uint32) {
 	t.offset = offset
 	t.commonSymbols = commonSymbols
 }
@@ -101,10 +101,13 @@ func (t *FastSymbolsTable) Symbolize(str string) uint32 {
 	}
 	if t.commonSymbols != nil {
 		// TODO: CommonSymbols is bounded size, it small enough to where linear search is faster?
-		for i := range t.commonSymbols {
+		/*for i := range t.commonSymbols {
 			if str == t.commonSymbols[i] {
 				return uint32(i)
 			}
+		}*/
+		if ref, ok := t.commonSymbols[str]; ok {
+			return ref
 		}
 	}
 
