@@ -907,15 +907,6 @@ ha_tracker:
       # CLI flag: -distributor.ha-tracker.multi.mirror-timeout
       [mirror_timeout: <duration> | default = 2s]
 
-  # (advanced) Deprecated. Use limits.ha_tracker_update_timeout.
-  [ha_tracker_update_timeout: <duration> | default = ]
-
-  # (advanced) Deprecated. Use limits.ha_tracker_update_timeout_jitter_max.
-  [ha_tracker_update_timeout_jitter_max: <duration> | default = ]
-
-  # (advanced) Deprecated. Use limits.ha_tracker_failover_timeout.
-  [ha_tracker_failover_timeout: <duration> | default = ]
-
 # (advanced) Max message size in bytes that the distributors will accept for
 # incoming push requests to the remote write API. If exceeded, the request will
 # be rejected.
@@ -1800,13 +1791,13 @@ results_cache:
 # CLI flag: -query-frontend.parallelize-shardable-queries
 [parallelize_shardable_queries: <boolean> | default = false]
 
-# (experimental) True to enable rewriting histogram queries for a more efficient
-# order of execution.
+# (experimental) Set to true to enable rewriting histogram queries for a more
+# efficient order of execution.
 # CLI flag: -query-frontend.rewrite-histogram-queries
 [rewrite_histogram_queries: <boolean> | default = false]
 
-# (experimental) True to enable rewriting queries to propagate label matchers
-# across binary expressions.
+# (experimental) Set to true to enable rewriting queries to propagate label
+# matchers across binary expressions.
 # CLI flag: -query-frontend.rewrite-propagate-matchers
 [rewrite_propagate_matchers: <boolean> | default = false]
 
@@ -4253,13 +4244,14 @@ ruler_alertmanager_client_config:
 # CLI flag: -distributor.otel-native-delta-ingestion
 [otel_native_delta_ingestion: <boolean> | default = false]
 
-# (experimental) Whether to disable escaping of metric and label names to the
-# classical Prometheus format when ingesting OTLP metrics. If
-# -distributor.otel-metric-suffixes-enabled is true, type and unit suffixes are
-# still appended as required. When this is enabled,
-# -validation.name-validation-scheme has to be configured as 'utf8'.
-# CLI flag: -distributor.otel-enable-unescaped-names
-[otel_enable_unescaped_names: <boolean> | default = false]
+# (experimental) Translation strategy to apply in OTLP endpoint for metric and
+# label names. If unspecified (the default), the strategy is derived from
+# -validation.name-validation-scheme and
+# -distributor.otel-metric-suffixes-enabled. Supported values: "",
+# UnderscoreEscapingWithSuffixes, UnderscoreEscapingWithoutSuffixes,
+# NoUTF8EscapingWithSuffixes, NoTranslation.
+# CLI flag: -distributor.otel-translation-strategy
+[otel_translation_strategy: <string> | default = ""]
 
 # (experimental) The default consistency level to enforce for queries when using
 # the ingest storage. Supports values: strong, eventual.
